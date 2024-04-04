@@ -47,6 +47,7 @@ async function getUser(request, response, next) {
  */
 async function createUser(request, response, next) {
   try {
+    const id = request.body.id;
     const name = request.body.name;
     const email = request.body.email;
     const password = request.body.password;
