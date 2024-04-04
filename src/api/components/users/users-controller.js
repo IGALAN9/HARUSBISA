@@ -47,10 +47,26 @@ async function getUser(request, response, next) {
  */
 async function createUser(request, response, next) {
   try {
-    const id = request.body.id;
     const name = request.body.name;
     const email = request.body.email;
     const password = request.body.password;
+    const comfrimpass = request.body.cpass;
+
+    if (comfrimpass !== password) {
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'Password not matched!!'
+      );
+    }
+
+    const truEmail = await usersService.mailChecks(email);
+
+    if (!truEmail) {
+      throw errorResponder(
+        errorTypes.EMAIL_ALREADY_TAKEN,
+        'Email already exist'
+      );
+    }
 
     const success = await usersService.createUser(name, email, password);
     if (!success) {
@@ -118,10 +134,31 @@ async function deleteUser(request, response, next) {
   }
 }
 
+async function ubspass(request, response, next) {
+  // check if password is valid
+  try {
+    const id = request.params.id;
+    const passwordlama = request.body.passwordlama;
+    const passwordbaru = request.body.passwordbaru;
+    const comfrimpass = request.body.comfrimpass;
+    const dapatkan = await usersService.changePass(
+      id,
+      passwordlama,
+      passwordbaru,
+      comfrimpass
+    );
+
+    return response.status(200).json({ message: '^o^ Berhasil' });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  ubspass,
 };

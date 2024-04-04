@@ -62,10 +62,29 @@ async function deleteUser(id) {
   return User.deleteOne({ _id: id });
 }
 
+/**
+ * Get user detail
+ * @param {string} email - User email
+ * @returns {Promise}
+ */
+async function mailCheck(email) {
+  return User.findOne({ email: email });
+}
+
+/**
+ * Get Pass detail
+ * @param {string} Password - User Password
+ * @returns {Promise}
+ */
+async function passCheck(id, newpass) {
+  await User.findByIdAndUpdate(id, { password: newpass });
+}
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  mailCheck,
+  passCheck,
 };
